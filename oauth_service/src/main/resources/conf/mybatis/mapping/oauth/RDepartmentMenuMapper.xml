@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.RDepartmentPermDao">
+    <resultMap id="BaseResultMap" type="com.cmhb.module.auth.domain.RDepartmentMenu">
+        <id column="id" jdbcType="BIGINT" property="id" javaType="long"/>
+        <result column="department_id" jdbcType="BIGINT" property="departmentId" javaType="long"/>
+        <result column="control_id" jdbcType="BIGINT" property="controlId" javaType="long"/>
+        <result column="client_id" jdbcType="BIGINT" property="clientId" javaType="long"/>
+    </resultMap>
+
+    <delete id="deleteClientPerms">
+        DELETE
+        FROM auth_r_department_control
+        WHERE department_id = #{departmentId}
+        AND client_id = #{clientId}
+    </delete>
+</mapper>

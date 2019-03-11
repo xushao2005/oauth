@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.AccessTokenDao">
+    <resultMap id="BaseResultMap" type="com.cmhb.module.auth.domain.AccessToken">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="client_secret" jdbcType="VARCHAR" property="clientSecret"/>
+        <result column="access_token" jdbcType="VARCHAR" property="accessToken"/>
+        <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken"/>
+        <result column="access_token_expired_time" jdbcType="TIMESTAMP" property="accessTokenExpiredTime"/>
+        <result column="refresh_token_expired_time" jdbcType="TIMESTAMP" property="refreshTokenExpiredTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_id, client_secret, access_token, refresh_token, access_token_expired_time,
+        refresh_token_expired_time
+    </sql>
+    <select id="findByToken" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from auth_access_token
+        where access_token = #{accessToken,jdbcType=VARCHAR}
+    </select>
+    <select id="findByRefreshToken" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from auth_access_token
+        where refresh_token = #{refreshToken,jdbcType=VARCHAR}
+    </select>
+    <select id="findByUser" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from auth_access_token
+        where user_id = #{userId}
+        and client_secret = #{secretKey}
+    </select>
+</mapper>

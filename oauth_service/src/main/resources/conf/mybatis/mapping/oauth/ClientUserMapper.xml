@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.RelClientUserDao">
+  <resultMap id="BaseResultMap" type="com.cmhb.module.auth.domain.RelClientUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId"/>
+    <result column="client_id" jdbcType="BIGINT" property="clientId"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, client_id
+  </sql>
+  <select id="selectByUserId" parameterType="long" resultType="long">
+    select
+      client_id
+    from auth_r_client_user
+    where user_id = #{userId}
+  </select>
+
+  <select id="selectByClientId" parameterType="long" resultType="java.lang.Long">
+    select
+    user_id
+    from auth_r_client_user
+    where client_id = #{clientId}
+  </select>
+
+
+</mapper>

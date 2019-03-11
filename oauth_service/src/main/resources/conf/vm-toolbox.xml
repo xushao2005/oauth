@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <xhtml>true</xhtml>
+    <tool>
+        <key>stringUtils</key>
+        <scope>application</scope>
+        <class>org.apache.commons.lang3.StringUtils</class>
+    </tool>
+    <tool>
+        <key>dateUtils</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.DateUtils</class>
+    </tool>
+    <tool>
+        <key>numberUtil</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.NumberUtil</class>
+    </tool>
+    <tool>
+        <key>StringHelper</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.StringHelper</class>
+    </tool>
+    <tool>
+        <key>moneyUtils</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.MoneyUtils</class>
+    </tool>
+    <tool>
+        <key>weightUtils</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.WeightUtils</class>
+    </tool>
+    <tool>
+        <key>numberFormatUtil</key>
+        <scope>application</scope>
+        <class>com.cmhb.common.utils.NumberFormatUtil</class>
+    </tool>
+    <tool>
+        <key>permitUtils</key>
+        <scope>request</scope>
+        <class>com.cmhb.common.utils.PermissionUtils</class>
+    </tool>
+</toolbox>

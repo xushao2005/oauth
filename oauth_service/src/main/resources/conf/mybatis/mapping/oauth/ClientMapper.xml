@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.ClientDao">
+    <resultMap id="BaseResultMap" type="com.cmhb.module.auth.domain.Client">
+    <id column="id" jdbcType="BIGINT" property="id" />
+      <result column="application_name" jdbcType="VARCHAR" property="applicationName"/>
+    <result column="description" jdbcType="VARCHAR" property="description" />
+      <result column="secret_key" jdbcType="VARCHAR" property="secretKey"/>
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="redirect_uri" jdbcType="VARCHAR" property="redirectUri" />
+    <result column="grant_types" jdbcType="VARCHAR" property="grantTypes" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, application_name, description, secret_key, uri, icon, redirect_uri, grant_types, app_id
+  </sql>
+  <sql id="where_column">
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="applicationName != null">
+        and application_name = #{applicationName,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null">
+        and description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="secretKey != null">
+        and secret_key = #{secretKey,jdbcType=VARCHAR}
+      </if>
+      <if test="grantTypes != null">
+        and grant_types = #{grantTypes,jdbcType=VARCHAR}
+      </if>
+      <if test="appId != null">
+        and app_id = #{appId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+    <update id="update">
+        UPDATE auth_client
+      <set>
+        <if test="applicationName!=null">
+          application_name = #{applicationName},
+        </if>
+        <if test="description!=null">
+          description = #{description},
+        </if>
+        <if test="secretKey!=null">
+          secret_key = #{secretKey},
+        </if>
+        <if test="uri!=null">
+          uri = #{uri},
+        </if>
+        <if test="icon!=null">
+          icon = #{icon},
+        </if>
+        <if test="redirectUri!=null">
+          redirect_uri = #{redirectUri},
+        </if>
+        <if test="grantTypes!=null">
+          grant_types = #{grantTypes},
+        </if>
+        <if test="appId!=null">
+          app_id = #{appId}
+        </if>
+      </set>
+      where id = #{id, jdbcType=BIGINT}
+    </update>
+    <select id="findByClientSecret" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+        from auth_client
+      where secret_key = #{secretKey,jdbcType=VARCHAR}
+  </select>
+    <select id="findByAppId" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+        from auth_client
+        where app_id = #{appId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+      from auth_client
+    <include refid="where_column"/>
+  </select>
+    <select id="selectDistinctClients" resultMap="BaseResultMap">
+    SELECT DISTINCT
+      id, application_name
+        FROM auth_client
+  </select>
+</mapper>

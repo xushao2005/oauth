@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.PositionDao">
+    <select id="findByDepartment" resultType="Position">
+        SELECT t1.*
+        FROM  auth_position t1, auth_r_department_position t2
+        WHERE t1.id = t2.position_id
+        AND t2.department_id = #{departmentId}
+        ORDER BY t1.id
+    </select>
+</mapper>

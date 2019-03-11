@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.DutyDao">
+    <select id="findByPosition" resultType="com.cmhb.module.auth.domain.Duty">
+        SELECT t1.*
+        FROM  auth_duty t1, auth_r_position_duty t2
+        WHERE t1.id = t2.duty_id
+        AND t2.position_id = #{positionId}
+        ORDER BY t1.id
+    </select>
+    <select id="findByUser" resultType="com.cmhb.module.auth.domain.Duty">
+        SELECT t1.*
+        FROM  auth_duty t1, auth_r_user_duty t2
+        WHERE t1.id = t2.duty_id
+        AND t2.user_id = #{userId}
+        ORDER BY t1.id
+    </select>
+</mapper>

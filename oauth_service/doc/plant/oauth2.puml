@@ -1,0 +1,14 @@
+@startuml
+autonumber
+userAgent -> client: 访问资源
+        client -> oAuthServer: 验证身份,请求authorize接口
+            oAuthServer -> userAgent: 登录页面
+            userAgent -> oAuthServer: user,password
+        oAuthServer -> client: code
+    client -> oAuthServer: 请求access_token接口
+    oAuthServer -> client: token
+
+client <- userAgent: 返回请求资源
+
+@enduml
+

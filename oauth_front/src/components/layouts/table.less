@@ -1,0 +1,48 @@
+:global {
+  .ant-table-tbody {
+    & > tr > td {
+      .delete {
+        display: none;
+      }
+      .operation {
+        display: none;
+        i {
+          margin-right: 2px;
+        }
+        .operationItem {
+          margin-right: 12px;
+          cursor: pointer;
+          color: #108ee9;
+        }
+      }
+    }
+    & > tr:hover > td {
+      .delete {
+        display: inline-block;
+      }
+      .operation {
+        display: inline-block;
+      }
+    }
+  }
+
+  .ant-pagination-options-size-changer.ant-select {
+    width: auto;
+  }
+
+  .ant-table-fixed {
+    & > .ant-table-tbody > tr.ant-table-row-hover > td {
+      .operation {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.view {
+  cursor: pointer;
+}
+
+.viewIcon {
+  margin-right: 2px;
+}

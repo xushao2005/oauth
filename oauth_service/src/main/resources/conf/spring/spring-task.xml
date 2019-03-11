@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 扫描 event包 -->
+    <context:component-scan base-package="com.cmhb.module.*.task"/>
+    <task:scheduled-tasks scheduler="apiScheduler">
+        <task:scheduled ref="employeeFullDistributeTask" method="cron"
+                        fixed-rate="${api.employee.task.distribute.fixed-rate}"/>
+        <task:scheduled ref="branchFullDistributeTask" method="cron"
+                        fixed-rate="${api.branch.task.distribute.fixed-rate}"/>
+    </task:scheduled-tasks>
+    <bean id="apiScheduler"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+        <property name="poolSize" value="${api.task.core_pool_size}"/>
+    </bean>
+    <bean id="employeeApi" class="com.cmhb.common.okhttp.ApiJsonClient" init-method="init">
+        <property name="url" value="${employee.api}"/>
+    </bean>
+    <bean id="branchApi" class="com.cmhb.common.okhttp.ApiJsonClient" init-method="init">
+        <property name="url" value="${branch.api}"/>
+    </bean>
+</beans>

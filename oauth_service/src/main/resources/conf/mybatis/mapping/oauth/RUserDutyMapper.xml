@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmhb.module.auth.dao.RUserDutyDao">
+
+    <select id="selectDutyIds" resultType="java.lang.Long">
+        SELECT duty_id
+        FROM auth_r_user_duty
+        WHERE user_id = #{userId};
+    </select>
+</mapper>

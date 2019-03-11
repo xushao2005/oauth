@@ -1,0 +1,29 @@
+@startuml
+autonumber
+alt 身份认证
+userAgent -> client: 访问资源, cookies携带sessionID
+else client session过期
+    alt 认证中心验证用户身份
+        client -> oAuthServer: 验证身份, cookies携带sessionID
+        else session过期
+            alt 登录认证中心
+            oAuthServer -> userAgent: 登录页面
+            userAgent -> oAuthServer: user,password
+        end
+        oAuthServer -> client: code,保存sessionID到cookie
+    end
+    client -> oAuthServer: code、appId、secretKey
+    oAuthServer -> client: token[accessToken,refreshToken]
+    client -> client: 缓存token
+end
+
+alt 授权
+client -> oAuthServer: 请求授权,携带access_token
+oAuthServer -> client: 用户权限
+client -> client: 缓存权限,验证权限
+end
+
+client -> userAgent: 返回请求结果
+
+@enduml
+

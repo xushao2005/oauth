@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="10000" />
+		<property name="logSlowSql" value="true" />
+		<property name="mergeSql" value="true" />
+	</bean>
+
+	<!-- 定制log日志输出内容 -->
+	<bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+		<!-- 关闭输出sql执行结果 -->
+		<property name="resultSetLogEnabled" value="false" />
+		<!-- 关闭连接信息 -->
+		<property name="connectionLogEnabled" value="false" />
+		<!-- 关闭数据源日志 -->
+		<property name="dataSourceLogEnabled" value="false" />
+		<!-- 输出执行的sql -->
+		<property name="statementExecutableSqlLogEnable" value="true" />
+	</bean>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		  init-method="init" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<property name="maxActive" value="${jdbc.maxActive}" />
+		<property name="minIdle" value="${jdbc.minIdle}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- 超过时间限制是否回收 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 超时时间；单位为秒。7200秒=2小时 -->
+		<property name="removeAbandonedTimeout" value="7200" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="false" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+				  value="20" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="slf4j" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+                <ref bean="log-filter"/>
+			</list>
+		</property>
+	</bean>
+
+	<!--<bean class="com.baomidou.mybatisplus.spring.MybatisMapperRefresh">-->
+	<!--<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>-->
+	<!--<constructor-arg name="mapperLocations" value="classpath*:conf/mybatis/mapping/*/*.xml"/>-->
+	<!--<constructor-arg name="delaySeconds" value="3"/>-->
+	<!--<constructor-arg name="sleepSeconds" value="30"/>-->
+	<!--<constructor-arg name="enabled" value="true"/>-->
+	<!--</bean>-->
+
+	<!-- Spring整合Mybatis -->
+	<bean id="sqlSessionFactory"
+		  class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+        <property name="globalConfig" ref="globalConfig"/>
+		<!-- 自动扫描Mapping.xml文件 -->
+		<property name="configLocation" value="classpath:conf/mybatis/mybatis-plus.xml" />
+		<property name="mapperLocations" value="classpath*:conf/mybatis/mapping/*/*.xml" />
+		<property name="typeAliasesPackage"
+				  value="com.cmhb.module.auth.domain,com.cmhb.module.employee.domain"/>
+		<property name="plugins">
+			<array>
+				<!-- 分页插件配置 -->
+				<bean class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+					<property name="dialectClazz"
+							  value="com.baomidou.mybatisplus.plugins.pagination.dialects.MySqlDialect"/>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	<!-- 自定义处理器 -->
+    <bean id="myMetaObjectHandler" class="com.cmhb.common.mybatisplus.MetaObjectHandler"/>
+    <bean id="autoSqlInjector" class="com.cmhb.common.mybatisplus.AutoSqlInjector">
+		<property name="autoInsertProperties">
+			<list>
+				<value>addTime</value>
+				<value>createTime</value>
+				<value>modTime</value>
+				<value>modifyTime</value>
+				<value>status</value>
+				<value>deleteFlag</value>
+			</list>
+		</property>
+		<property name="autoUpdateProperties">
+			<list>
+				<value>modTime</value>
+				<value>modifyTime</value>
+			</list>
+		</property>
+		<property name="deleteFlagField" value="deleteFlag"/>
+	</bean>
+    <bean id="globalConfig" class="com.cmhb.common.mybatisplus.MybatisGlobalConfiguration">
+		<!--
+            AUTO->`0`("数据库ID自增")
+             INPUT->`1`(用户输入ID")
+            ID_WORKER->`2`("全局唯一ID")
+            UUID->`3`("全局唯一ID")
+        -->
+		<property name="idType" value="1"/>
+		<!-- 公共字段填充处理器 -->
+		<property name="metaObjectHandler" ref="myMetaObjectHandler"/>
+		<property name="sqlInjector" ref="autoSqlInjector"/>
+        <!--todo SqlInjector逻辑删除-->
+	</bean>
+
+
+	<!-- MyBatis 动态实现 -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 对Dao 接口动态实现，需要知道接口在哪 -->
+		<property name="basePackage"
+				  value="com.cmhb.module.auth.dao,com.cmhb.module.employee.dao"/>
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- transaction support -->
+	<!-- PlatformTransactionMnager -->
+	<bean id="txManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+</beans>
